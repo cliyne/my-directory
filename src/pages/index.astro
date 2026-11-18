@@ -1,40 +1,67 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import fs from 'fs';
-import path from 'path';
+import { getEntries } from '../lib/data';
 
-const csvPath = path.resolve('./public/data.csv');
-const fileContent = fs.readFileSync(csvPath, 'utf8');
-const lines = fileContent.split('\n').filter(Boolean);
-const headers = lines[0].split(',');
-const items = lines.slice(1).map(line => {
-  const values = line.split(',');
-  let obj = {};
-  headers.forEach((h, i) => { obj[h.trim()] = values[i]?.trim(); });
-  return obj;
-});
+const entries = getEntries();
+const categories = [...new Set(entries.map((e) => e.category))].sort();
 ---
-
-<BaseLayout title="DirectoryHub - Curated Tools & Software" description="Explore verified tools, software, and services.">
-  <section style="text-align: center; padding: 3rem 0;">
-    <h1>Find the Right Tool Instantly</h1>
-    <p style="color: #666;">Explore our database of curated, high-intent software and services.</p>
-  </section>
-
-  <section>
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
-      {items.map(item => (
-        <article style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <small style="color: #4f46e5; font-weight: 600;">{item.category}</small>
-            <h3 style="margin: 0.5rem 0;"><a href={`/my-directory/${item.slug}/`} style="text-decoration: none;">{item.title}</a></h3>
-            <p style="font-size: 0.95rem; color: #555;">{item.description}</p>
-          </div>
-          <footer>
-            <a href={`/my-directory/${item.slug}/`} class="outline" style="width: 100%; text-align: center;">View Details</a>
-          </footer>
-        </article>
-      ))}
+<BaseLayout title="DirectoryHub – Find the Right Tool Instantly" description="Browse curated, high-intent software and services with pricing and features.">
+  <section class="hero">
+    <h1>Find the right tool, faster.</h1>
+    <p>Curated listings with pricing, features and alternatives.</p>
+    <div class="search">
+      <input id="q" type="search" placeholder="Search tools, categories, tags…" autocomplete="off" />
+    </div>
+    <div class="chips">
+      <button class="chip active" data-cat="all">All</button>
+      {categories.map((c) => <button class="chip" data-cat={c}>{c}</button>)}
     </div>
   </section>
+
+  <p class="count" id="count">{entries.length} tools</p>
+
+  <div class="grid" id="grid">
+    {entries.map((e) => (
+      <a class="card" href={`/${e.slug}/`}
+         data-cat={e.category}
+         data-search={[e.name, e.category, e.tagline, ...e.tags].join(' ').toLowerCase()}>
+        <div class="card-top">
+          <div class="avatar">{e.name.charAt(0).toUpperCase()}</div>
+          {e.pricing && <span class="badge price">{e.pricing}</span>}
+        </div>
+        <h3>{e.name}</h3>
+        <p class="tagline">{e.tagline}</p>
+        <div class="badges">
+          <span class="badge">{e.category}</span>
+          {e.tags.slice(0, 3).map((t) => <span class="badge tag">{t}</span>)}
+        </div>
+      </a>
+    ))}
+  </div>
 </BaseLayout>
+
+<script>
+  const q = document.getElementById('q') as HTMLInputElement;
+  const chips = document.querySelectorAll<HTMLButtonElement>('.chip[data-cat]');
+  const cards = document.querySelectorAll<HTMLElement>('#grid .card');
+  const count = document.getElementById('count')!;
+  let cat = 'all';
+
+  function apply() {
+    const term = q.value.trim().toLowerCase();
+    let n = 0;
+    cards.forEach((c) => {
+      const show = (cat === 'all' || c.dataset.cat === cat) && (!term || c.dataset.search!.includes(term));
+      c.style.display = show ? '' : 'none';
+      if (show) n++;
+    });
+    count.textContent = `${n} tool${n === 1 ? '' : 's'}`;
+  }
+  q.addEventListener('input', apply);
+  chips.forEach((b) => b.addEventListener('click', () => {
+    chips.forEach((x) => x.classList.remove('active'));
+    b.classList.add('active');
+    cat = b.dataset.cat!;
+    apply();
+  }));
+</script>
