@@ -1,4 +1,4 @@
-slug,title,category,location,pricing,description,affiliateLink
-ai-writer-pro,AI Writer Pro,AI Writing Tools,Remote,$29/mo,An advanced AI writing assistant built specifically for professional copywriters and marketers.,https://example.com/ref/aiwriter
-crm-boost,CRM Boost,Sales Software,Remote,$49/mo,A lightweight, lightning-fast CRM designed for remote freelance consultants and agencies.,https://example.com/ref/crmboost
-design-mate,Design Mate,Design Tools,Remote,Free / $15,Browser-based graphic design suite with automated asset resizing and templates.,https://example.com/ref/designmate
+slug,name,category,tagline,description,pricing,url,tags
+ai-writer-pro,AI Writer Pro,AI Writing Tools,AI writing assistant for copywriters and marketers,"An advanced AI writing assistant built specifically for professional copywriters and marketers.",Free trial,https://example.com/ai-writer-pro,ai|copywriting|marketing
+crm-boost,CRM Boost,Sales Software,Lightweight CRM for small teams,"A lightweight CRM with pipeline views, email sync and simple automations for small sales teams.",From $12/mo,https://example.com/crm-boost,crm|sales|small-business
+design-mate,Design Mate,Design Tools,Browser-based graphic design suite,"Browser-based graphic design suite with automated asset resizing and templates.",Freemium,https://example.com/design-mate,design|templates|graphics
