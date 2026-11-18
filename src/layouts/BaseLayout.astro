@@ -6,6 +6,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 <!doctype html>
 <html lang="en">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <slot name="head" />
+  </head>
+
   <head>
     <meta charset="utf-8" />
     <meta name="google-site-verification" content="hD3CHfqhcih0HcQNDj-oRwsShYZ3mJA6U4K_PJ5DFY0" />
@@ -38,6 +43,4 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   </body>
 </html>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <slot name="head" />
-  </head>
+  
