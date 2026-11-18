@@ -4,8 +4,8 @@ interface Props { title: string; description?: string; }
 const { title, description = 'Curated directory of the best software tools.' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
-
-
+<!doctype html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="google-site-verification" content="hD3CHfqhcih0HcQNDj-oRwsShYZ3mJA6U4K_PJ5DFY0" />
@@ -19,6 +19,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <slot name="head" />
   </head>
   <body>
     <header class="site-header">
@@ -29,19 +30,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     </header>
     <main class="container"><slot /></main>
     <footer class="site-footer">
-      <div class="container">© {new Date().getFullYear()} DirectoryHub. Built with Astro &amp; Cloudflare Pages.</div>
+      <div class="container">
+        © {new Date().getFullYear()} DirectoryHub. Built with Astro &amp; Cloudflare Pages.
+        <br />Some links on this site are affiliate links. We may earn a commission at no extra cost to you.
+      </div>
     </footer>
-<div class="container">
-  © {new Date().getFullYear()} DirectoryHub. Built with Astro &amp; Cloudflare Pages.
-  <br />Some links on this site are affiliate links. We may earn a commission at no extra cost to you.
-</div>
   </body>
 </html>
-
-<!doctype html>
-<html lang="en">
-
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <slot name="head" />
-  </head>
-  
