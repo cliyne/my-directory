@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://my-directory-anv.pages.dev/sitemap.xml
