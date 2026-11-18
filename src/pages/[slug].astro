@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import fs from 'fs';
+import path from 'path';
+
+export async function getStaticPaths() {
+  const csvPath = path.resolve('./public/data.csv');
+  const fileContent = fs.readFileSync(csvPath, 'utf8');
+  
+  const lines = fileContent.split('\n').filter(Boolean);
+  const headers = lines[0].split(',');
+  
+  const rows = lines.slice(1).map(line => {
+    const values = line.split(',');
+    let obj = {};
+    headers.forEach((h, i) => { obj[h.trim()] = values[i]?.trim(); });
+    return obj;
+  });
+
+  return rows.map(item => ({
+    params: { slug: item.slug },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+---
+
+<BaseLayout title={`${item.title} - Review, Pricing & Alternatives`} description={item.description}>
+  <article>
+    <span style="background: #eef2ff; color: #4f46e5; padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.8rem; font-weight: 600;">
+      {item.category}
+    </span>
+    <h1 style="margin-top: 0.75rem;">{item.title}</h1>
+    <p style="font-size: 1.2rem; color: #444;">{item.description}</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
+      <div style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
+        <strong>Pricing:</strong> {item.pricing}
+      </div>
+      <div style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
+        <strong>Availability:</strong> {item.location}
+      </div>
+    </div>
+
+    <div style="margin-top: 2rem;">
+      <a href={item.affiliateLink} target="_blank" role="button" class="contrast">
+        Visit Official Website &rarr;
+      </a>
+    </div>
+  </article>
+
+  <section style="margin-top: 3rem;">
+    <h3>Related Alternatives</h3>
+    <p>Looking for more options in {item.category}? <a href="/my-directory/">Browse the complete directory</a>.</p>
+  </section>
+</BaseLayout>
