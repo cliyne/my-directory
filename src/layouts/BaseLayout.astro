@@ -1,0 +1,26 @@
+---
+const { title, description } = Astro.props;
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  </head>
+  <body>
+    <header class="container">
+      <nav>
+        <ul><li><strong><a href="/my-directory/">DirectoryHub</a></strong></li></ul>
+        <ul><li><a href="/my-directory/">Browse All</a></li></ul>
+      </nav>
+    </header>
+    <main class="container">
+      <slot />
+    </main>
+    <footer class="container" style="text-align: center; font-size: 0.85rem; color: #666; margin-top: 4rem;">
+      <p>&copy; 2026 DirectoryHub. Built with Astro & GitHub Pages.</p>
+    </footer>
+  </body>
+</html>
