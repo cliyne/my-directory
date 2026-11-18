@@ -1,6 +1,5 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://cliyne.github.io',
-  base: '/my-directory',
+  site: 'https://my-directory-anv.pages.dev',
 });
