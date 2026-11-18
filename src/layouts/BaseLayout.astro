@@ -4,12 +4,7 @@ interface Props { title: string; description?: string; }
 const { title, description = 'Curated directory of the best software tools.' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
-<!doctype html>
-<html lang="en">
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <slot name="head" />
-  </head>
 
   <head>
     <meta charset="utf-8" />
@@ -43,4 +38,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   </body>
 </html>
 
+<!doctype html>
+<html lang="en">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <slot name="head" />
+  </head>
   
