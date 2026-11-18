@@ -1,57 +1,52 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import fs from 'fs';
-import path from 'path';
+import { getEntries } from '../lib/data';
 
-export async function getStaticPaths() {
-  const csvPath = path.resolve('./public/data.csv');
-  const fileContent = fs.readFileSync(csvPath, 'utf8');
-  
-  const lines = fileContent.split('\n').filter(Boolean);
-  const headers = lines[0].split(',');
-  
-  const rows = lines.slice(1).map(line => {
-    const values = line.split(',');
-    let obj = {};
-    headers.forEach((h, i) => { obj[h.trim()] = values[i]?.trim(); });
-    return obj;
-  });
-
-  return rows.map(item => ({
-    params: { slug: item.slug },
-    props: { item },
+export function getStaticPaths() {
+  const entries = getEntries();
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: {
+      entry,
+      related: entries.filter((e) => e.category === entry.category && e.slug !== entry.slug).slice(0, 3),
+    },
   }));
 }
-
-const { item } = Astro.props;
+const { entry, related } = Astro.props;
 ---
+<BaseLayout title={`${entry.name} – Pricing, Features & Alternatives`} description={entry.tagline}>
+  <article class="detail">
+    <nav class="crumbs"><a href="/">Home</a> / {entry.category} / {entry.name}</nav>
+    <div class="badges">
+      <span class="badge">{entry.category}</span>
+      {entry.pricing && <span class="badge price">{entry.pricing}</span>}
+    </div>
+    <h1>{entry.name}</h1>
+    <p class="lead">{entry.tagline}</p>
 
-<BaseLayout title={`${item.title} - Review, Pricing & Alternatives`} description={item.description}>
-  <article>
-    <span style="background: #eef2ff; color: #4f46e5; padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.8rem; font-weight: 600;">
-      {item.category}
-    </span>
-    <h1 style="margin-top: 0.75rem;">{item.title}</h1>
-    <p style="font-size: 1.2rem; color: #444;">{item.description}</p>
-    
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0;">
-      <div style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
-        <strong>Pricing:</strong> {item.pricing}
+    <div class="panel">
+      <p>{entry.description}</p>
+      <div class="badges" style="margin-top:16px">
+        {entry.tags.map((t) => <span class="badge tag">{t}</span>)}
       </div>
-      <div style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
-        <strong>Availability:</strong> {item.location}
-      </div>
+      {entry.url && <a class="btn" href={entry.url} target="_blank" rel="noopener sponsored nofollow">Visit {entry.name} →</a>}
     </div>
 
-    <div style="margin-top: 2rem;">
-      <a href={item.affiliateLink} target="_blank" role="button" class="contrast">
-        Visit Official Website &rarr;
-      </a>
-    </div>
+    <div class="ad-slot"></div>
+
+    {related.length > 0 && (
+      <>
+        <h2 class="section">More in {entry.category}</h2>
+        <div class="grid">
+          {related.map((r) => (
+            <a class="card" href={`/${r.slug}/`}>
+              <div class="avatar">{r.name.charAt(0).toUpperCase()}</div>
+              <h3>{r.name}</h3>
+              <p class="tagline">{r.tagline}</p>
+            </a>
+          ))}
+        </div>
+      </>
+    )}
   </article>
-
-  <section style="margin-top: 3rem;">
-    <h3>Related Alternatives</h3>
-    <p>Looking for more options in {item.category}? <a href="/my-directory/">Browse the complete directory</a>.</p>
-  </section>
 </BaseLayout>
