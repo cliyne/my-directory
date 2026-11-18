@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import fs from 'fs';
+import path from 'path';
+
+const csvPath = path.resolve('./public/data.csv');
+const fileContent = fs.readFileSync(csvPath, 'utf8');
+const lines = fileContent.split('\n').filter(Boolean);
+const headers = lines[0].split(',');
+const items = lines.slice(1).map(line => {
+  const values = line.split(',');
+  let obj = {};
+  headers.forEach((h, i) => { obj[h.trim()] = values[i]?.trim(); });
+  return obj;
+});
+---
+
+<BaseLayout title="DirectoryHub - Curated Tools & Software" description="Explore verified tools, software, and services.">
+  <section style="text-align: center; padding: 3rem 0;">
+    <h1>Find the Right Tool Instantly</h1>
+    <p style="color: #666;">Explore our database of curated, high-intent software and services.</p>
+  </section>
+
+  <section>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+      {items.map(item => (
+        <article style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <small style="color: #4f46e5; font-weight: 600;">{item.category}</small>
+            <h3 style="margin: 0.5rem 0;"><a href={`/my-directory/${item.slug}/`} style="text-decoration: none;">{item.title}</a></h3>
+            <p style="font-size: 0.95rem; color: #555;">{item.description}</p>
+          </div>
+          <footer>
+            <a href={`/my-directory/${item.slug}/`} class="outline" style="width: 100%; text-align: center;">View Details</a>
+          </footer>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
